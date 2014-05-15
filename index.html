@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Experiência</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="anchored_scroll.js"></script>
+    <script src="token_filter.js"></script>
+    <style>
+    	html {
+    		font-family: sans-serif;
+    	}
+
+    	body {
+    		padding: 0;
+    		margin: 0;
+    	}
+
+    	div.column {
+    		width: 518px;
+    		padding: 0;
+    		margin: 0;
+    	}
+
+    	input.attributeFilter {
+    		width: 100%;
+    		padding: 6px;
+    		margin: 0;
+    		box-sizing: border-box;
+    	}
+		
+		div.searchAttributes {
+			width: 100%;
+			overflow: auto;
+		}
+
+    	ul {
+            display: block;
+    		list-style: none;
+    		padding: 8px;
+    		margin: 0;
+    	}
+
+        ul li {
+			display: inline-block;
+			width: 114px;
+			margin: 2px;
+			font-size: 80%;
+			text-align: center;
+			padding: 8px 16px;
+			border: #ccc solid 1px;
+			border-radius: 4px;
+			background: #eee;
+			height: 32px;
+			box-sizing: border-box;
+        }
+
+    	h1 {
+    		display: block;
+    		padding: 4px 16px;
+    		margin: 0;
+    		color: white;
+    		text-shadow: 0 -1px 0 rgba(0,0,0, 0.75);
+    		background: grey;
+    		cursor: pointer;
+            font-size: 100%;
+    	}
+
+        h1:hover {
+            background: darkgrey;
+        }
+
+    	.anchors {
+    		position: fixed;
+    		left: 0;
+            width: 501px;
+    	}
+    </style>
+  </head>
+  <body>
+  	<div class="column">
+	  	<input class="attributeFilter" name="filter"></input>
+	  	<div class="searchAttributes">
+		  	<h1>Capivara Rainha</h1>
+		    <ul>
+		    	<li>earache</li>
+				<li>excited</li>
+				<li>good-bye</li>
+				<li>grandma</li>
+				<li>grocery</li>
+				<li>indoors</li>
+				<li>January</li>
+				<li>kitchen</li>
+				<li>lullaby</li>
+				<li>monster</li>
+				<li>morning</li>
+				<li>naughty</li>
+				<li>October</li>
+				<li>pajamas</li>
+				<li>pretend</li>
+				<li>quarter</li>
+				<li>shampoo</li>
+				<li>stomach</li>
+				<li>there's</li>
+				<li>they'll</li>
+				<li>they're</li>
+				<li>they've</li>
+				<li>tonight</li>
+				<li>unhappy</li>
+				<li>airplane</li>
+				<li>alphabet</li>
+				<li>bathroom</li>
+				<li>favorite</li>
+				<li>medicine</li>
+				<li>December</li>
+				<li>dinosaur</li>
+				<li>elephant</li>
+				<li>February</li>
+				<li>football</li>
+				<li>forehead</li>
+				<li>headache</li>
+				<li>hospital</li>
+				<li>lollipop</li>
+				<li>November</li>
+				<li>outdoors</li>
+				<li>question</li>
+				<li>railroad</li>
+				<li>remember</li>
+				<li>sandwich</li>
+				<li>scissors</li>
+				<li>shoulder</li>
+				<li>softball</li>
+				<li>tomorrow</li>
+				<li>upstairs</li>
+				<li>vacation</li>
+				<li>restroom</li>
+				<li>astronaut</li>
+				<li>beautiful</li>
+				<li>bumblebee</li>
+				<li>cardboard</li>
+				<li>chocolate</li>
+				<li>Christmas</li>
+				<li>classroom</li>
+			</ul>
+			<h1>Capivara Princesa</h1>
+			<ul>
+				<li>cranberry</li>
+				<li>drugstore</li>
+				<li>furniture</li>
+				<li>milkshake</li>
+				<li>nightmare</li>
+				<li>telephone</li>
+				<li>difficult</li>
+				<li>everybody</li>
+				<li>hamburger</li>
+				<li>September</li>
+				<li>spaceship</li>
+				<li>spaghetti</li>
+				<li>stoplight</li>
+				<li>underwear</li>
+				<li>yesterday</li>
+				<li>ice cream</li>
+				<li>automobile</li>
+				<li>blackboard</li>
+				<li>downstairs</li>
+				<li>photograph</li>
+				<li>strawberry</li>
+				<li>television</li>
+				<li>toothbrush</li>
+				<li>toothpaste</li>
+				<li>baby-sitter</li>
+				<li>post office</li>
+				<li>grandfather</li>
+				<li>grandmother</li>
+				<li>potato chip</li>
+				<li>upside down</li>
+				<li>kindergarten</li>
+				<li>refrigerator</li>
+				<li>Thanksgiving</li>
+				<li>United States</li>
+				<li>pumpkin</li>
+				<li>salt</li>
+				<li>melted</li>
+				<li>handed</li>
+				<li>printed</li>
+				<li>landed</li>
+				<li>wanted</li>
+				<li>filled</li>
+				<li>showed</li>
+				<li>hugged</li>
+				<li>tugged</li>
+				<li>planned</li>
+				<li>jogged</li>
+				<li>spilled</li>
+				<li>smelled</li>
+				<li>grilled</li>
+				<li>slammed</li>
+				<li>rushed</li>
+				<li>spelled</li>
+				<li>saved</li>
+				<li>baked</li>
+				<li>named</li>
+				<li>lined</li>
+				<li>smiled</li>
+				<li>closed</li>
+				<li>helped</li>
+				<li>jumped</li>
+				<li>looked</li>
+				<li>clapped</li>
+				<li>tapped</li>
+				<li>kicked</li>
+				<li>dropped</li>
+			</ul>
+			<h1>Capivara Donzela</h1>
+			<ul>
+				<li>zipped</li>
+				<li>wished</li>
+				<li>pitched</li>
+				<li>missed</li>
+				<li>walked</li>
+				<li>worked</li>
+				<li>she'll</li>
+				<li>you'll</li>
+				<li>he'll</li>
+				<li>we're</li>
+				<li>she's</li>
+				<li>he's</li>
+				<li>you're</li>
+				<li>we're</li>
+				<li>jazz
+			</ul>
+		</div>
+	</div>
+    <script>
+    	setupAnchoredScroll($(".searchAttributes:first"));
+    </script>
+  </body>
+</html>
