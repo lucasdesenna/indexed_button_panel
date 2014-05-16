@@ -1,32 +1,58 @@
 function setupAnchoredScroll(container) {
-	var top = $(container).offset().top;
-	$(container).css({height: $(window).innerHeight() - top + "px"});
+	var position = getPosition(container);
 
-	$(window).resize(function(){
-		$(container).css({height: $(window).innerHeight() - top + "px"});
+	setupPosition(container, position);
+	setupAnchors(container, position);
+
+	$(container).children("h1").each(function(index, element){
+		updateAnchor(element, index, container);
+	});
+}
+
+function getPosition(container) {
+	var top = $(container).offset().top;
+	var height = $(window).innerHeight();
+	$(container).siblings().each(function(index, element){
+		height -= $(element).outerHeight();
 	});
 
-	var upperAnchors = $("<div class='anchors upper'></div>");
-	$(upperAnchors).css({position: "fixed", left: "0px", top: top + "px", width: $(container).width() + "px"});
+	var bottom = $(window).innerHeight() - top - height;
 
-	var lowerAnchors = $("<div class='anchors lower'></div>");
-	$(lowerAnchors).css({position: "fixed", left: "0px", bottom: $(window).height() - top - (container).height() + "px", width: $(container).width() + "px"});
+	var position = {top: top, height: height, bottom: bottom};
+
+	return position;
+}
+
+function setupPosition(container, position) {
+	$(container).css({height: position.height + "px"});
+
+	$(window).resize(function(){
+		$(container).css({height: getPosition(container).height + "px"});
+	});
 
 	$(container).scroll(function(){
 		$(container).children("h1").each(function(index, element){
-				toggleAnchor(element, index, container, top);
+			updateAnchor(element, index, container, position);
 		});
 	});
+}
+
+function setupAnchors(container, position) {
+	var upperAnchors = $("<div class='anchors upper'></div>");
+	var lowerAnchors = $("<div class='anchors lower'></div>");
+
+	$(upperAnchors).css({position: "fixed", left: "0px", top: position.top + "px", width: $(container).width() - 15 + "px"});
+	$(lowerAnchors).css({position: "fixed", left: "0px", bottom: position.bottom + "px", width: $(container).width() - 15 + "px"});
 
 	$(container).children("h1").each(function(index, element){
-		var ePosition = $(element).position().top;
-		var eHeight = $(element).outerHeight("true");
+		var anchor = element;
 
-		$(upperAnchors).append($(element).clone().click(function(){
-			$(container).animate({scrollTop: ePosition - (index + 1) * eHeight}, 400);
+		$(upperAnchors).append($(anchor).clone().click(function(){
+			jumpToAnchor(container, element, index);
 		}));
-		$(lowerAnchors).append($(element).clone().click(function(){
-			$(container).animate({scrollTop: ePosition - (index + 1) * eHeight}, 400);
+
+		$(lowerAnchors).append($(anchor).clone().click(function(){
+			jumpToAnchor(container, element, index);
 		}));
 	});
 
@@ -34,28 +60,31 @@ function setupAnchoredScroll(container) {
 	$(lowerAnchors).children().hide();
 
 	$(container).append(upperAnchors).append(lowerAnchors);
-
-	$(container).children("h1").each(function(index, element){
-		toggleAnchor(element, index, container, top);
-	});
 }
 
-function toggleAnchor(target, index, container, top) {
-	var tIndex = index + 1;
-	var tHeight = realHeight(target);
+function updateAnchor(anchor, index, container) {
+	var aIndex = index + 1;
+	var aHeight = $(anchor).outerHeight();
 	var cHeight = $(container).height();
 
-	var tPosition = $(target).position().top - top;
+	var aPosition = $(anchor).position().top - $(container).offset().top;
 	var scrolledArea = $(container).scrollTop();
 
-	if(tPosition < index * tHeight) {
-		$(container).find(".anchors.upper").children(":nth-child(" + tIndex + ")").show();
-	} else if(tPosition > cHeight - ($(container).children("h1").length - index) * tHeight) {
-		$(container).find(".anchors.lower").children(":nth-child(" + tIndex + ")").show();
+	if(aPosition < index * aHeight) {
+		$(container).find(".anchors.upper").children(":nth-child(" + aIndex + ")").show();
+	} else if(aPosition > cHeight - ($(container).children("h1").length - index) * aHeight) {
+		$(container).find(".anchors.lower").children(":nth-child(" + aIndex + ")").show();
 	} else {
-		$(container).find(".anchors.upper").children(":nth-child(" + tIndex + ")").hide();
-		$(container).find(".anchors.lower").children(":nth-child(" + tIndex + ")").hide();
+		$(container).find(".anchors.upper").children(":nth-child(" + aIndex + ")").hide();
+		$(container).find(".anchors.lower").children(":nth-child(" + aIndex + ")").hide();
 	}
+}
+
+function jumpToAnchor(container, anchor, anchorIndex) {
+	var ePosition = $(anchor).position().top;
+	var eHeight = $(anchor).outerHeight();
+
+	$(container).animate({scrollTop: ePosition - (anchorIndex + 1) * eHeight}, 400);
 }
 
 function pixelToInt(px) {
