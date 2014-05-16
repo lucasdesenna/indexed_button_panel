@@ -1,6 +1,5 @@
 function setupAnchoredScroll(container) {
 	var top = $(container).offset().top;
-	
 	$(container).css({height: $(window).innerHeight() - top + "px"});
 
 	$(window).resize(function(){
@@ -8,10 +7,10 @@ function setupAnchoredScroll(container) {
 	});
 
 	var upperAnchors = $("<div class='anchors upper'></div>");
-	$(upperAnchors).css({top: top + "px"});
+	$(upperAnchors).css({position: "fixed", left: "0px", top: top + "px", width: $(container).width() + "px"});
 
 	var lowerAnchors = $("<div class='anchors lower'></div>");
-	$(lowerAnchors).css({bottom: "0px"});
+	$(lowerAnchors).css({position: "fixed", left: "0px", bottom: $(window).height() - top - (container).height() + "px", width: $(container).width() + "px"});
 
 	$(container).scroll(function(){
 		$(container).children("h1").each(function(index, element){
@@ -21,7 +20,6 @@ function setupAnchoredScroll(container) {
 
 	$(container).children("h1").each(function(index, element){
 		var ePosition = $(element).position().top;
-		//var eHeight = realHeight(element);
 		var eHeight = $(element).outerHeight("true");
 
 		$(upperAnchors).append($(element).clone().click(function(){
@@ -65,10 +63,3 @@ function pixelToInt(px) {
 
 	return integer;
 }
-/*
-function realHeight(target) {
-	var realH = $(target).height() + pixelToInt($(target).css("padding-top")) + pixelToInt($(target).css("padding-bottom"));
-
-	return realH;
-}
-*/
