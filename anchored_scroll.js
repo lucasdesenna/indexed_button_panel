@@ -21,7 +21,8 @@ function setupAnchoredScroll(container) {
 
 	$(container).children("h1").each(function(index, element){
 		var ePosition = $(element).position().top;
-		var eHeight = realHeight(element);
+		//var eHeight = realHeight(element);
+		var eHeight = $(element).outerHeight("true");
 
 		$(upperAnchors).append($(element).clone().click(function(){
 			$(container).animate({scrollTop: ePosition - (index + 1) * eHeight}, 400);
@@ -64,9 +65,10 @@ function pixelToInt(px) {
 
 	return integer;
 }
-
+/*
 function realHeight(target) {
 	var realH = $(target).height() + pixelToInt($(target).css("padding-top")) + pixelToInt($(target).css("padding-bottom"));
 
 	return realH;
 }
+*/
