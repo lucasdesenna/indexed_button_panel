@@ -1,23 +1,18 @@
 function setupAnchoredScroll(container) {
-	var position = getPosition(container);
+	setupPosition(container, getPosition(container));
+	setupAnchors(container, getPosition(container));
 
-	setupPosition(container, position);
-	setupAnchors(container, position);
-
-	$(container).children("h1").each(function(index, element){
-		updateAnchor(element, index, container);
-	});
+	updateAnchors(container);
 }
 
 function getPosition(container) {
 	var top = $(container).offset().top;
 	var height = $(window).innerHeight();
 	$(container).siblings().each(function(index, element){
-		height -= $(element).outerHeight();
+		height -= $(element).outerHeight(true);
 	});
 
 	var bottom = $(window).innerHeight() - top - height;
-
 	var position = {top: top, height: height, bottom: bottom};
 
 	return position;
@@ -31,9 +26,7 @@ function setupPosition(container, position) {
 	});
 
 	$(container).scroll(function(){
-		$(container).children("h1").each(function(index, element){
-			updateAnchor(element, index, container, position);
-		});
+		updateAnchors(container);
 	});
 }
 
@@ -47,12 +40,16 @@ function setupAnchors(container, position) {
 	$(container).children("h1").each(function(index, element){
 		var anchor = element;
 
+		$(element).click(function(){
+			jumpToAnchor(container, element, index + 1);
+		});
+
 		$(upperAnchors).append($(anchor).clone().click(function(){
-			jumpToAnchor(container, element, index);
+			jumpToAnchor(container, element, index + 1);
 		}));
 
 		$(lowerAnchors).append($(anchor).clone().click(function(){
-			jumpToAnchor(container, element, index);
+			jumpToAnchor(container, element, index + 1);
 		}));
 	});
 
@@ -62,29 +59,37 @@ function setupAnchors(container, position) {
 	$(container).append(upperAnchors).append(lowerAnchors);
 }
 
-function updateAnchor(anchor, index, container) {
-	var aIndex = index + 1;
-	var aHeight = $(anchor).outerHeight();
-	var cHeight = $(container).height();
+function updateAnchors(container) {
+	$(container).children("h1").each(function(index, searchAttr){
+		var sAIndex = index + 1;
+		var sAHeight = $(searchAttr).outerHeight(true);
+		var sAPosition = $(searchAttr).position().top - $(container).offset().top;
 
-	var aPosition = $(anchor).position().top - $(container).offset().top;
-	var scrolledArea = $(container).scrollTop();
+		var cHeight = $(container).innerHeight();
+		var scrolledArea = $(container).scrollTop();
 
-	if(aPosition < index * aHeight) {
-		$(container).find(".anchors.upper").children(":nth-child(" + aIndex + ")").show();
-	} else if(aPosition > cHeight - ($(container).children("h1").length - index) * aHeight) {
-		$(container).find(".anchors.lower").children(":nth-child(" + aIndex + ")").show();
-	} else {
-		$(container).find(".anchors.upper").children(":nth-child(" + aIndex + ")").hide();
-		$(container).find(".anchors.lower").children(":nth-child(" + aIndex + ")").hide();
-	}
+		if(sAPosition < index * sAHeight) {
+			$(container).find(".anchors.upper").children(":nth-child(" + sAIndex + ")").show();
+		} else if(sAPosition > cHeight - ($(container).children("h1").length - sAIndex) * sAHeight) {
+			$(container).find(".anchors.lower").children(":nth-child(" + sAIndex + ")").show();
+		} else {
+			$(container).find(".anchors.upper").children(":nth-child(" + sAIndex + ")").hide();
+			$(container).find(".anchors.lower").children(":nth-child(" + sAIndex + ")").hide();
+		}
+	});
 }
 
-function jumpToAnchor(container, anchor, anchorIndex) {
-	var ePosition = $(anchor).position().top;
-	var eHeight = $(anchor).outerHeight();
+function jumpToAnchor(container, searchAttr, sAIndex) {
+	var sAPosition = $(searchAttr).position().top - $(container).offset().top;
+	var sAHeight = $(searchAttr).outerHeight(true);
 
-	$(container).animate({scrollTop: ePosition - (anchorIndex + 1) * eHeight}, 400);
+	var cScrollHeight = $(container)[0].scrollHeight;
+
+	var targetScroll = $(container).scrollTop() + sAPosition - (sAIndex - 1) * sAHeight;
+	
+	$(container).animate({scrollTop: targetScroll}, 400, "swing", function() {
+		updateAnchors(container);
+	});
 }
 
 function pixelToInt(px) {

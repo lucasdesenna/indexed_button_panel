@@ -1,14 +1,21 @@
 function setupFilter(filter) {
-    setupSugestionList(filter);
+    setupAutocomplete(filter);
 
     $(input).change(function(){
-        autocomplete(filter);
+        updateSuggestions(input);
     });
 }
 
-function autocomplete(filter) {
+function setupAutocomplete(filter) {
+    var list = $("<ul class='autocomplete'></ul>");
+    $(list).hide();
+
+    $(filter).parent().append(list);
+}
+
+function updateSuggestions(filter, dependencies) {
     var input = $(filter).val();
-    var sugestions = getSugestions(input);
+    var suggestions = getSuggestions(input, dependencies);
 }
 
 function showDependants(token, panel, dependencies) {
