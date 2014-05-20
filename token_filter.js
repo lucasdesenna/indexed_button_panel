@@ -1,9 +1,8 @@
-function setupFilter(filter, sAttrsContainer) {
+function setupFilter(filter) {
     setupAutocomplete(filter);
 
-    $(filter).bind("keyup", function(e) { //BIND SÓ PARA EFEITO DE TESTE
-        filterButtons(filter, sAttrsContainer);
-        updateAnchors(sAttrsContainer);
+    $(input).change(function(){
+        updateSuggestions(input);
     });
 }
 
@@ -15,19 +14,8 @@ function setupAutocomplete(filter) {
 }
 
 function updateSuggestions(filter, dependencies) {
-    var keyword = replaceSpecialChars($(filter).val());
-    var suggestions = getSuggestions(keyword, dependencies);
-}
-
-function filterButtons(filter, sAttrsContainer, callback) {
-    var keyword = replaceSpecialChars($(filter).val());
-
-    $(sAttrsContainer).find("ul > li").hide();
-    $(sAttrsContainer).find("ul > li:contains(" + keyword + ")").show();
-    
-    if(typeof callback !== "undefined") {
-        callback();
-    }
+    var input = $(filter).val();
+    var suggestions = getSuggestions(input, dependencies);
 }
 
 function showDependants(token, panel, dependencies) {
@@ -40,31 +28,3 @@ function showDependants(token, panel, dependencies) {
         $(panel).find("#" + dependants[d]).show();
     }
 }
-
-/* NÃO COPIAR DAQUI PARA BAIXO */
-function replaceSpecialChars(str) {
-    if (typeof str == "string") {
-        var specialChars = [
-            {val:"a",let:"áàãâä"},
-            {val:"e",let:"éèêë"},
-            {val:"i",let:"íìîï"},
-            {val:"o",let:"óòõôö"},
-            {val:"u",let:"úùûü"},
-            {val:"c",let:"ç"},
-            {val:"",let:"?!()"}
-        ];
-
-        var $spaceSymbol = '-';
-        var regex;
-        var returnString = str.toLowerCase();
-
-        for (var i = 0; i < specialChars.length; i++) {
-            regex = new RegExp("["+specialChars[i].let+"]", "g");
-            returnString = returnString.replace(regex, specialChars[i].val);
-            regex = null;
-        }
-        return returnString.replace(/\s/g,$spaceSymbol);
-    }
-
-    return '';
-};
