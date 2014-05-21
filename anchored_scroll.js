@@ -1,3 +1,37 @@
+function createIndexedButtonPanel(target, clientData, buttonCap) {
+	buttonCap = typeof buttonCap !== 'undefined' ? buttonCap : 200;
+
+	for(var sA in clientData) {
+		var header = $("<header class='searchAttribute'></header>");
+
+		var attrName = sA[0].toUpperCase() + sA.slice(1);
+		var title = $("<h1>" + attrName + "</h1>");
+
+		var buttonCount;
+		if(clientData[sA].length <= buttonCap) {
+			buttonCount = clientData[sA].length;
+		} else {
+			buttonCount = buttonCap;
+		}
+		var counter = $("<span>(" + buttonCount + "/" + clientData[sA].length + ")</span>");
+
+		$(header).append(title).append(counter);
+
+		var tnkList = clientData[sA];
+		var panel = $("<ul id='" + sA + "' class='searchAttribute'></ul>");
+		var tknName;
+		var button;
+
+		for(var tkn = 0; tkn < buttonCap; tkn++) {
+			tknName = tnkList[tkn].name.slice(0, 10);
+			button = $("<li>" + tknName + "</li>");
+			$(panel).append(button);
+		}
+
+		$(target).append(header).append(panel);
+	}
+}
+
 function setupAnchoredScroll(container) {
 	setupPosition(container, getPosition(container));
 	setupAnchors(container, getPosition(container));
@@ -33,11 +67,12 @@ function setupPosition(container, position) {
 function setupAnchors(container, position) {
 	var upperAnchors = $("<div class='anchors upper'></div>");
 	var lowerAnchors = $("<div class='anchors lower'></div>");
+	var scrollBarWidth = 17;
 
-	$(upperAnchors).css({position: "fixed", left: "0px", top: position.top + "px", width: $(container).width() - 15 + "px"});
-	$(lowerAnchors).css({position: "fixed", left: "0px", bottom: position.bottom + "px", width: $(container).width() - 15 + "px"});
+	$(upperAnchors).css({position: "fixed", left: "0px", top: position.top + "px", width: $(container).width() - scrollBarWidth + "px"});
+	$(lowerAnchors).css({position: "fixed", left: "0px", bottom: position.bottom + "px", width: $(container).width() - scrollBarWidth + "px"});
 
-	$(container).children("h1").each(function(index, element){
+	$(container).children("header").each(function(index, element){
 		var anchor = element;
 
 		$(element).click(function(){
@@ -60,7 +95,7 @@ function setupAnchors(container, position) {
 }
 
 function updateAnchors(container) {
-	$(container).children("h1").each(function(index, searchAttr){
+	$(container).children("header").each(function(index, searchAttr){
 		var sAIndex = index + 1;
 		var sAHeight = $(searchAttr).outerHeight(true);
 		var sAPosition = $(searchAttr).position().top - $(container).offset().top;
